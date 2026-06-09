@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>str(8)</title>
+  <link rel="icon" type="image/png" sizes="40x40" href="icons/brand-40.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/brand-180.png">
+  <meta property="og:title" content="str(8)">
+  <meta property="og:description" content="Make it plain again.">
+  <meta property="og:image" content="icons/brand-1024.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:      #F4F2EA;
+      --fg1:        #1F1E1A;
+      --fg2:        #46443E;
+      --fg3:        #8A877C;
+      --line:       #E2DED2;
+      --line-strong:#C9C4B5;
+      --accent:     #DC8B28;
+      --accent-ink: #B06D17;
+
+      --font-en:   'Hanken Grotesk', system-ui, sans-serif;
+      --font-jp:   'Zen Kaku Gothic New', 'Hanken Grotesk', system-ui, sans-serif;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+    }
+
+    html {
+      background: var(--paper);
+      color: var(--fg1);
+      font-family: var(--font-jp);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ── samon (枯山水) ambient background ── */
+    .samon-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      color: var(--line);
+      opacity: 0.55;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 64px 32px 96px;
+    }
+
+    /* ── animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* load-time entrance — applied directly to elements */
+    .load-1, .load-2, .load-3 {
+      opacity: 0;
+      animation: fadeUp 500ms cubic-bezier(.22,.68,0,1.2) forwards;
+    }
+    .load-1 { animation-delay:   0ms; }
+    .load-2 { animation-delay: 100ms; }
+    .load-3 { animation-delay: 200ms; }
+
+    /* scroll-triggered entrance */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 480ms cubic-bezier(.22,.68,0,1.2),
+                  transform 480ms cubic-bezier(.22,.68,0,1.2);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* stagger helpers for grouped reveals */
+    .reveal-group .reveal:nth-child(1) { transition-delay:   0ms; }
+    .reveal-group .reveal:nth-child(2) { transition-delay:  60ms; }
+    .reveal-group .reveal:nth-child(3) { transition-delay: 120ms; }
+    .reveal-group .reveal:nth-child(4) { transition-delay: 180ms; }
+    .reveal-group .reveal:nth-child(5) { transition-delay: 240ms; }
+    .reveal-group .reveal:nth-child(6) { transition-delay: 300ms; }
+    .reveal-group .reveal:nth-child(7) { transition-delay: 360ms; }
+
+    /* respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .load-1, .load-2, .load-3 {
+        animation: none;
+        opacity: 1;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ── header ── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 96px;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg1);
+      text-decoration: none;
+    }
+
+    .header-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg3);
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+    .nav-link:hover { color: var(--fg1); }
+
+    /* ── letter stamp ── */
+    .stamp {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg3);
+      margin-bottom: 48px;
+    }
+
+    /* ── hero ── */
+    .tagline {
+      font-family: var(--font-en);
+      font-size: clamp(34px, 6.5vw, 56px);
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      color: var(--fg1);
+      margin-bottom: 56px;
+    }
+
+    /* ── manifesto ── */
+    .manifesto {
+      border-top: 1px solid var(--line);
+      padding-top: 48px;
+    }
+
+    .manifesto p {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 2.05;
+      color: var(--fg2);
+      margin-bottom: 24px;
+      text-align: justify;
+      text-justify: inter-ideograph;
+    }
+
+    .manifesto p.strong {
+      color: var(--fg1);
+      font-weight: 500;
+    }
+
+    .manifesto .break {
+      border: 0;
+      border-top: 1px solid var(--line);
+      margin: 40px 0;
+    }
+
+    /* ── closing ── */
+    .closing {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .closing-quote {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--fg3);
+      font-style: normal;
+      font-family: var(--font-jp);
+    }
+
+    .signature {
+      margin-top: 40px;
+      text-align: right;
+    }
+    .signature .name {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg1);
+    }
+    .signature .name::before {
+      content: "──";
+      font-size: 13px;
+      letter-spacing: 0;
+      color: var(--fg3);
+    }
+
+    /* ── products ── */
+    .products {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .products-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg3);
+      margin-bottom: 20px;
+    }
+
+    .product-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .product-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      color: inherit;
+      transition: color 160ms ease;
+    }
+    .product-link:first-of-type { border-top: 1px solid var(--line); }
+    .product-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--fg1);
+      transition: color 160ms ease;
+    }
+    .product-desc {
+      font-family: var(--font-jp);
+      font-size: 13px;
+      color: var(--fg3);
+    }
+    .product-link:hover .product-name { color: var(--accent-ink); }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer span, footer a {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      color: var(--fg3);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--fg1); }
+
+    @media (max-width: 480px) {
+      body { padding: 48px 24px 80px; }
+      header { margin-bottom: 64px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 砂紋 ambient background (animated) -->
+<div class="samon-bg samon-animated"></div>
+
+<header class="load-1">
+  <a href="index.html" class="wordmark">
+    <img src="icons/brand-40.png" alt="" class="header-icon">
+    str(8)
+  </a>
+  <a href="chat.html" class="nav-link">Talk →</a>
+</header>
+
+<p class="stamp load-2">From the studio</p>
+
+<h1 class="tagline load-3">Make it<br>plain again.</h1>
+
+<div class="manifesto reveal-group">
+
+  <p class="strong reveal">提案します。</p>
+
+  <p class="reveal">人類にスマートフォンが与えられてから、はや十数年。その長くも濃い歴史のなかで、様々な使い方が見出されてきました。</p>
+
+  <p class="reveal">例えば会話。電話はインターネット経由でも繋がるようになり、メールの代わりにチャットアプリが台頭しました。例えばカレンダー。紙とペンがなくても、指をなぞるだけで、機械のほうが勝手に、日々の予定をまとめてくれるようになりました。</p>
+
+  <p class="reveal">新たに開発されたものもあります。動画配信プラットフォーム、SNS、ストリーミングサービス、ゲーム。どこからでも、誰とでも、何でも楽しめる時代になりました。</p>
+
+  <hr class="break">
+
+  <p class="reveal">しかし、我々人類には早すぎたのでしょうか。コンテンツにハマりすぎて依存症と言われるようになり、匿名であることを言い訳に容易に批判できるようになりました。娯楽はスマートフォンに溢れ、やがて消費する速度が加速し、味わうことなく飲み込むしかありません。アプリに飽きが来ないよう、機能は矢継ぎ早に足されていき、もはや本来の目的が失われているのではないかと疑うほどです。</p>
+
+  <p class="reveal">もしかしたら、取り返しのつかないところまで来てしまったのかもしれません。</p>
+
+  <hr class="break">
+
+  <p class="strong reveal">行き過ぎたら、また戻ればいいのです。</p>
+
+  <p class="reveal">紙とペンを用意しろとは言いません。ですが、今この画面に執着することよりも、例えば本や映画で心を動かしたり、カメラでふとした瞬間を切り取ったり。付き合い方を変えれば、スマートフォンもただのネットサーフィンの為の板ではなくなります。</p>
+
+  <p class="reveal">インターネットで頭を溶かすのが好きなのもまた、自分のアイデンティティの一つです。なら、それを制限してダイエットするのではなく、食べる物自体を変えるのはどうでしょうか。</p>
+
+  <p class="strong reveal">もっとシンプルに、もっと単純に、もっとわかりやすく。そんな思いから、このブランドはスタートしました。</p>
+
+  <div class="closing reveal">
+    <p class="closing-quote">「生まれる世界が違えば、まだ息ができたのでしょうか。」</p>
+    <div class="signature">
+      <span class="name">str(8)</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="products reveal">
+  <p class="products-label">Products</p>
+  <a href="chat.html" class="product-link">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="icons/chat-40.png" alt="" class="product-icon">
+      <span class="product-name">str(8) Talk</span>
+    </div>
+    <span class="product-desc">チャットアプリ</span>
+  </a>
+</div>
+
+<footer class="reveal">
+  <span>© 2025 str(8)</span>
+  <div style="display:flex;gap:20px;">
+    <a href="chat.html#terms">利用規約</a>
+    <a href="chat.html#privacy">プライバシー</a>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer — trigger .reveal elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // once visible, stop watching
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -32px 0px'
+  });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+<script src="samon.js"></script>
+<script src="samon-animate.js"></script>
+
+</body>
+</html>
