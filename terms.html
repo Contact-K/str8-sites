@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>利用規約 — str(8) Talk</title>
+  <link rel="icon" type="image/png" sizes="40x40" href="icons/chat-40.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:      #F4F2EA;
+      --fg1:        #1F1E1A;
+      --fg2:        #46443E;
+      --fg3:        #8A877C;
+      --line:       #E2DED2;
+      --accent-ink: #B06D17;
+      --font-jp:   'Zen Kaku Gothic New', 'Hanken Grotesk', system-ui, sans-serif;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+    }
+
+    html {
+      background: var(--paper);
+      color: var(--fg1);
+      font-family: var(--font-jp);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 64px 32px 96px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 80px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .breadcrumb a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg1);
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+    .breadcrumb a:hover { color: var(--accent-ink); }
+    .breadcrumb .sep { color: var(--fg3); }
+    .breadcrumb .current {
+      font-weight: 700;
+      color: var(--fg3);
+      letter-spacing: -0.02em;
+    }
+    .header-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: var(--font-jp);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--fg1);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .date {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      color: var(--fg3);
+      margin-bottom: 48px;
+      display: block;
+    }
+
+    h2 {
+      font-family: var(--font-jp);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fg1);
+      margin: 36px 0 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--fg2);
+      line-height: 1.9;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 16px;
+      margin-bottom: 12px;
+    }
+    ul li {
+      font-size: 14px;
+      color: var(--fg2);
+      line-height: 1.9;
+    }
+
+    a { color: var(--accent-ink); }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer span, footer a {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      color: var(--fg3);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--fg1); }
+
+    @media (max-width: 480px) {
+      body { padding: 48px 24px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="index.html"><img src="icons/brand-40.png" alt="" class="header-icon">str(8)</a>
+    <span class="sep">/</span>
+    <a href="chat.html"><img src="icons/chat-40.png" alt="" class="header-icon">Talk</a>
+    <span class="sep">/</span>
+    <span class="current">利用規約</span>
+  </div>
+</header>
+
+<h1>利用規約</h1>
+<span class="date">2025年</span>
+
+<h2>禁止事項</h2>
+<p>本アプリでは、ユーザーが作成したメッセージ・チラシ（フライヤー）を近くの端末へ共有します。すべての利用者が安心して使えるよう、次の行為を禁止します。</p>
+<ul>
+  <li>他者への嫌がらせ、誹謗中傷、脅迫、差別的な発言</li>
+  <li>わいせつ・暴力的・違法なコンテンツの投稿や共有</li>
+  <li>詐欺、なりすまし、虚偽のチラシ・勧誘</li>
+  <li>スパム、無差別な大量送信</li>
+  <li>他者の権利（著作権・プライバシー等）の侵害</li>
+  <li>13歳未満の利用</li>
+</ul>
+
+<h2>通報・ブロックについて</h2>
+<p>不適切なメッセージやチラシは、長押しメニューまたは詳細画面の「通報」から報告できます。通報すると、その投稿は端末上で直ちに非表示になり、投稿者は自動的にブロックされます。ブロックした相手のメッセージ・チラシは今後表示されません。深刻な被害がある場合は、下記の要望・問い合わせ先までご連絡ください。</p>
+
+<h2>免責事項</h2>
+<p>本アプリのメッセージ・チラシはすべて利用者本人が作成・共有するものであり、その内容について運営は一切の責任を負いません。投稿内容の正確性・適法性・安全性は各利用者の責任に帰属します。利用者間のトラブルや、投稿コンテンツに起因する損害について、運営は責任を負いかねます。不適切な内容を見つけた場合は通報・ブロック機能をご利用ください。</p>
+
+<h2>規約の変更</h2>
+<p>本規約は、アプリ内または配信ページにて事前に告知のうえ変更することがあります。変更後も本アプリを利用し続けた場合、変更後の規約に同意したものとみなします。</p>
+
+<h2>準拠法・管轄</h2>
+<p>本規約は日本法に準拠します。本アプリに関する紛争については、東京地方裁判所を第一審の専属的合意管轄裁判所とします。</p>
+
+<h2>要望・問い合わせ</h2>
+<p>ご質問・ご要望・通報後の対応依頼は <a href="mailto:moonshineddrunk@hotmail.com">moonshineddrunk@hotmail.com</a> までご連絡ください。</p>
+
+<footer>
+  <span>© 2025 str(8)</span>
+  <div style="display:flex;gap:20px;">
+    <a href="chat.html">← Talk</a>
+    <a href="privacy.html">プライバシー</a>
+  </div>
+</footer>
+
+</body>
+</html>
