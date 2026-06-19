@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使い方 — str(8) Talk</title>
+  <link rel="icon" type="image/png" sizes="40x40" href="icons/chat-40.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/chat-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:      #F4F2EA;
+      --fg1:        #1F1E1A;
+      --fg2:        #46443E;
+      --fg3:        #8A877C;
+      --line:       #E2DED2;
+      --accent:     #DC8B28;
+      --accent-ink: #B06D17;
+      --font-jp:   'Zen Kaku Gothic New', 'Hanken Grotesk', system-ui, sans-serif;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+    }
+
+    html {
+      background: var(--paper);
+      color: var(--fg1);
+      font-family: var(--font-jp);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+    }
+
+    /* ── samon ── */
+    .samon-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      color: var(--line);
+      opacity: 0.55;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    body {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 64px 32px 96px;
+    }
+
+    /* ── animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .load-1, .load-2, .load-3 {
+      opacity: 0;
+      animation: fadeUp 500ms cubic-bezier(.22,.68,0,1.2) forwards;
+    }
+    .load-1 { animation-delay:   0ms; }
+    .load-2 { animation-delay: 100ms; }
+    .load-3 { animation-delay: 200ms; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 480ms cubic-bezier(.22,.68,0,1.2),
+                  transform 480ms cubic-bezier(.22,.68,0,1.2);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal-group .reveal:nth-child(1) { transition-delay:   0ms; }
+    .reveal-group .reveal:nth-child(2) { transition-delay:  60ms; }
+    .reveal-group .reveal:nth-child(3) { transition-delay: 120ms; }
+    .reveal-group .reveal:nth-child(4) { transition-delay: 180ms; }
+    .reveal-group .reveal:nth-child(5) { transition-delay: 240ms; }
+    .reveal-group .reveal:nth-child(6) { transition-delay: 300ms; }
+    .reveal-group .reveal:nth-child(7) { transition-delay: 360ms; }
+    .reveal-group .reveal:nth-child(8) { transition-delay: 420ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .load-1, .load-2, .load-3 { animation: none; opacity: 1; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── header ── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 80px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .breadcrumb a {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg1);
+      text-decoration: none;
+      transition: color 160ms ease;
+    }
+    .breadcrumb a:hover { color: var(--accent-ink); }
+    .breadcrumb .sep { color: var(--fg3); }
+    .breadcrumb .current {
+      font-weight: 700;
+      color: var(--fg3);
+      letter-spacing: -0.02em;
+    }
+    .header-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ── page title ── */
+    .page-title {
+      font-family: var(--font-jp);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--fg1);
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 56px;
+    }
+
+    /* ── steps ── */
+    .steps { }
+
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 0 20px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .step:first-child { border-top: none; }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      padding-top: 3px;
+      line-height: 1;
+    }
+
+    .step-body { }
+
+    .step-title {
+      font-family: var(--font-jp);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--fg1);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .step-body p {
+      font-size: 14px;
+      color: var(--fg2);
+      line-height: 1.95;
+      margin-bottom: 10px;
+    }
+    .step-body p:last-child { margin-bottom: 0; }
+
+    .step-body p strong {
+      color: var(--fg1);
+      font-weight: 500;
+    }
+
+    /* ── tip pill ── */
+    .tip {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-ink);
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 2px 7px;
+      margin-bottom: 10px;
+    }
+
+    /* ── closing note ── */
+    .closing-note {
+      margin-top: 56px;
+      padding-top: 36px;
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+      color: var(--fg3);
+      line-height: 1.9;
+    }
+    .closing-note a {
+      color: var(--accent-ink);
+      text-decoration: none;
+    }
+    .closing-note a:hover { text-decoration: underline; }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer span, footer a {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      color: var(--fg3);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--fg1); }
+
+    @media (max-width: 480px) {
+      body { padding: 48px 24px 80px; }
+      header { margin-bottom: 56px; }
+      .step { grid-template-columns: 32px 1fr; gap: 0 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="samon-bg samon-animated"></div>
+
+<header class="load-1">
+  <div class="breadcrumb">
+    <a href="index.html"><img src="icons/brand-40.png" alt="" class="header-icon">str(8)</a>
+    <span class="sep">/</span>
+    <a href="chat.html"><img src="icons/chat-40.png" alt="" class="header-icon">Talk</a>
+    <span class="sep">/</span>
+    <span class="current">使い方</span>
+  </div>
+</header>
+
+<h1 class="page-title load-2">str(8) Talk の使い方</h1>
+
+<div class="steps reveal-group">
+
+  <!-- 01 -->
+  <div class="step reveal">
+    <span class="step-num">01</span>
+    <div class="step-body">
+      <p class="step-title">アプリを起動する</p>
+      <p>起動すると<strong>ホーム画面</strong>が開きます。画面上部に「近接P2P 接続中」と表示されていれば、周囲の端末との通信が始まっています。インターネット接続は不要です。</p>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="step reveal">
+    <span class="step-num">02</span>
+    <div class="step-body">
+      <p class="step-title">画面を移動する（ホイールナビ）</p>
+      <p>画面下部の<strong>円形ホイール</strong>を回すか、アイコンを直接タップして各画面へ移動します。ホーム・フレンド・DM・広告・ショップ・設定の6画面があります。</p>
+      <p>リスト形式のナビに変えたい場合は、設定から「ホイールナビ」をオフにしてください。</p>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="step reveal">
+    <span class="step-num">03</span>
+    <div class="step-body">
+      <p class="step-title">ホームでチラシを見る</p>
+      <p>ホーム画面には近くの人が投稿した<strong>チラシ</strong>が浮かび上がります。タップすると詳細（タイトル・本文・カテゴリ・残り時間）が確認できます。</p>
+      <p>画面下部のフィルターホイールで<strong>緊急 / おすすめ / 愚痴 / 驚き / 感謝 / 通常</strong>の種類を絞り込めます。</p>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="step reveal">
+    <span class="step-num">04</span>
+    <div class="step-body">
+      <p class="step-title">チラシを投稿する</p>
+      <p>ホーム右下の<strong>「＋」ボタン</strong>からチラシを作成できます。タイトル・本文・画像・カテゴリを設定して投稿すると、近くにいる人の画面に届きます。</p>
+      <span class="tip">Tip</span>
+      <p>緊急カテゴリで投稿すると、災害時など急を要する情報を周囲に知らせることができます。</p>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="step reveal">
+    <span class="step-num">05</span>
+    <div class="step-body">
+      <p class="step-title">チラシを広める</p>
+      <p>気になるチラシの詳細画面で<strong>「自分の広告を広める」</strong>をタップすると、そのチラシをさらに周囲へ転送できます。自分の意志で応援したい情報だけを広められます。</p>
+      <p>受け取りたくないチラシは「広告を捨てる」で非表示にできます。</p>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="step reveal">
+    <span class="step-num">06</span>
+    <div class="step-body">
+      <p class="step-title">フレンドと出会う</p>
+      <p><strong>フレンド画面</strong>には近くで検出された人が「いま近くに」として表示されます。アプローチして相手に承認されると、フレンド登録が完了します。</p>
+      <p>「これまで」には過去に近くで出会った人の履歴が残ります。</p>
+      <span class="tip">Tip</span>
+      <p>名前を表示したくない場合は、設定の<strong>「匿名で参加」</strong>をオンにしてください。匿名のままフレンドになることもできます。</p>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="step reveal">
+    <span class="step-num">07</span>
+    <div class="step-body">
+      <p class="step-title">DMでメッセージを送る</p>
+      <p>フレンドになった相手とは<strong>DM画面</strong>でやりとりできます。メッセージは端末間で直接送受信され、外部サーバーには送信されません。</p>
+    </div>
+  </div>
+
+  <!-- 08 -->
+  <div class="step reveal">
+    <span class="step-num">08</span>
+    <div class="step-body">
+      <p class="step-title">不適切なコンテンツを通報・ブロックする</p>
+      <p>チラシやメッセージを<strong>長押し</strong>するか、詳細画面から「通報」できます。通報すると投稿は即座に非表示になり、投稿者は自動的にブロックされます。</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="closing-note reveal">
+  ご不明な点は <a href="mailto:moonshineddrunk@hotmail.com">moonshineddrunk@hotmail.com</a> までお気軽にどうぞ。また<a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a>もあわせてご確認ください。
+</p>
+
+<footer class="reveal">
+  <span>© 2025 str(8)</span>
+  <div style="display:flex;gap:20px;">
+    <a href="chat.html">← Talk</a>
+    <a href="terms.html">利用規約</a>
+    <a href="privacy.html">プライバシー</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+<script src="samon.js"></script>
+<script src="samon-animate.js"></script>
+
+</body>
+</html>
