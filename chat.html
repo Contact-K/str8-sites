@@ -271,6 +271,18 @@
       padding-bottom: 1px;
       cursor: default;
     }
+    .btn-live {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent-ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 1px;
+      transition: color 160ms ease, border-color 160ms ease;
+    }
+    .btn-live:hover { color: var(--fg1); border-color: var(--fg1); }
 
     /* ── footer ── */
     footer {
@@ -351,8 +363,7 @@
 <div id="download" class="download reveal">
   <span class="download-label">Download</span>
   <div class="download-actions">
-    <span class="btn-dim">App Store — Soon</span>
-    <span class="btn-dim">Google Play — Soon</span>
+    <a href="https://apps.apple.com/us/app/%E3%83%BCtalk/id6780547134" class="btn-live" target="_blank" rel="noopener">App Store</a>
   </div>
 </div>
 
